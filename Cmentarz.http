@@ -1,0 +1,6 @@
+@Cmentarz_HostAddress = http://localhost:5151
+
+GET {{Cmentarz_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
