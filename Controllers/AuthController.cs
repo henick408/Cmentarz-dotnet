@@ -12,20 +12,17 @@ namespace Cmentarz.Controllers;
 [Route("/api/[controller]")]
 public class AuthController(GraveyardDbContext context, IConfiguration config) : ControllerBase
 {
-    private readonly GraveyardDbContext _context = context;
-    private readonly IConfiguration _config = config;
-
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        var user = _context.Users.SingleOrDefault(user => user.Email == request.Email);
+        var user = context.Users.SingleOrDefault(user => user.Email == request.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
             return Unauthorized();
         }
         
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_config["JwtKey"]);
+        var key = Encoding.ASCII.GetBytes(config["JwtKey"]);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([
