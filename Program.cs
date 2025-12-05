@@ -52,6 +52,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<GraveyardDbContext>();
+            context.Database.Migrate();
             DbSeeder.Seed(context);
         }
 
