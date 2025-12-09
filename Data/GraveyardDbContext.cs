@@ -34,6 +34,6 @@ public class GraveyardDbContext(DbContextOptions<GraveyardDbContext> options) : 
             .HasOne(grave => grave.Deceased)
             .WithOne(deceased => deceased.Grave)
             .HasForeignKey<Deceased>(deceased => deceased.GraveId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -135,7 +135,7 @@ namespace Cmentarz.Migrations
                     b.HasOne("Cmentarz.Models.Grave", "Grave")
                         .WithOne("Deceased")
                         .HasForeignKey("Cmentarz.Models.Deceased", "GraveId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Grave");

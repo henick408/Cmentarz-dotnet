@@ -1,4 +1,6 @@
 ﻿using Cmentarz.Data;
+using Cmentarz.Dto;
+using Cmentarz.Mappers.Grave;
 using Cmentarz.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +10,13 @@ namespace Cmentarz.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GraveController(GraveyardDbContext context) : ControllerBase
+public class GraveController(GraveyardDbContext context, IGraveMapper graveMapper) : ControllerBase
 {
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var graves = await context.Graves
-            .Include(g => g.Status)
-            .Include(g => g.Deceased)
             .ToListAsync();
 
         return Ok(graves);
@@ -39,19 +39,29 @@ public class GraveController(GraveyardDbContext context) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Employee")]
-    public async Task<IActionResult> Create([FromBody] Grave grave)
+    //[Authorize(Roles = "Employee")]
+    public async Task<IActionResult> Create([FromBody] GraveCreateDto graveDto)
     {
-        var statusExists = await context.GraveStatuses.AnyAsync(s => s.Id == grave.StatusId);
-        if (!statusExists)
-        {
-            return BadRequest("Invalid StatusId");
-        }
 
-        context.Graves.Add(grave);
+        var status = context.GraveStatuses
+            .ToList()
+            .Where(graveStatus => graveStatus.Name.Equals("Available"))
+            .Select(graveStatus => graveStatus.Id)
+            .ToList();
+        
+        var grave = new Grave
+        {
+            Location = graveDto.Location,
+            Price = graveDto.Price,
+            StatusId = status[0]
+        };
+        
+        await context.Graves.AddAsync(grave);
         await context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(Get), new { id = grave.Id }, grave);
+        var outputGraveDto = graveMapper.MapToDto(grave);
+
+        return CreatedAtAction(nameof(Get), new { id = grave.Id }, outputGraveDto);
     }
 
     [HttpPut("{id:int}")]

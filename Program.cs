@@ -1,4 +1,5 @@
 using System.Text;
+using Cmentarz.Configuration;
 using Cmentarz.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,9 @@ public class Program
 
         builder.Services.AddDbContext<GraveyardDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        
+        // Mappers
+        builder.Services.AddMappers();
 
         // Swagger
         builder.Services.AddEndpointsApiExplorer();

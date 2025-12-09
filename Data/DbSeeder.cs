@@ -30,7 +30,7 @@ public static class DbSeeder
         {
             var graveStatuses = new List<GraveStatus>
             {
-                new GraveStatus { Name = "Avaiable" },
+                new GraveStatus { Name = "Available" },
                 new GraveStatus { Name = "Occupied" },
                 new GraveStatus { Name = "Reserved" }
             };
