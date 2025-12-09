@@ -1,11 +1,11 @@
 ﻿namespace Cmentarz.Mappers.Grave;
 
-using Dto;
+using Dto.Grave;
 using Models;
 
 public class GraveMapper : IGraveMapper
 {
-    public GraveReadDto MapToDto(Grave grave)
+    public GraveReadDto MapToReadDto(Grave grave)
     {
         return new GraveReadDto
         {
@@ -17,7 +17,7 @@ public class GraveMapper : IGraveMapper
         };
     }
 
-    public Grave MapFromDto(GraveReadDto graveDto)
+    public Grave MapFromReadDto(GraveReadDto graveDto)
     {
         return new Grave
         {

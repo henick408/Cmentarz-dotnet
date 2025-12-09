@@ -9,5 +9,5 @@ public class Deceased
     public required DateOnly DeathDate { get; set; }
     
     public required int GraveId { get; set; }
-    public required Grave Grave { get; set; }
+    public Grave? Grave { get; set; }
 }

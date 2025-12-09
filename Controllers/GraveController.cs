@@ -1,5 +1,5 @@
 ﻿using Cmentarz.Data;
-using Cmentarz.Dto;
+using Cmentarz.Dto.Grave;
 using Cmentarz.Mappers.Grave;
 using Cmentarz.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -19,23 +19,25 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         var graves = await context.Graves
             .ToListAsync();
 
-        return Ok(graves);
+        var graveDtos = graves.Select(graveMapper.MapToReadDto);
+        
+        return Ok(graveDtos);
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Get(int id)
     {
         var grave = await context.Graves
-            .Include(g => g.Status)
-            .Include(g => g.Deceased)
-            .FirstOrDefaultAsync(g => g.Id == id);
+            .FindAsync(id);
 
         if (grave == null)
         {
             return NotFound();
         }
 
-        return Ok(grave);
+        var graveDto = graveMapper.MapToReadDto(grave);
+
+        return Ok(graveDto);
     }
 
     [HttpPost]
@@ -59,7 +61,7 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         await context.Graves.AddAsync(grave);
         await context.SaveChangesAsync();
 
-        var outputGraveDto = graveMapper.MapToDto(grave);
+        var outputGraveDto = graveMapper.MapToReadDto(grave);
 
         return CreatedAtAction(nameof(Get), new { id = grave.Id }, outputGraveDto);
     }

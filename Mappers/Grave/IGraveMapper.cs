@@ -1,10 +1,10 @@
 ﻿namespace Cmentarz.Mappers.Grave;
 
 using Models;
-using Dto;
+using Dto.Grave;
 
 public interface IGraveMapper
 {
-    GraveReadDto MapToDto(Grave grave);
-    Grave MapFromDto(GraveReadDto graveDto);
+    GraveReadDto MapToReadDto(Grave grave);
+    Grave MapFromReadDto(GraveReadDto graveDto);
 }

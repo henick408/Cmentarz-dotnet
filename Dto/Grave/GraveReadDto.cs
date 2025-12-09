@@ -1,4 +1,4 @@
-﻿namespace Cmentarz.Dto;
+﻿namespace Cmentarz.Dto.Grave;
 
 public class GraveReadDto
 {
