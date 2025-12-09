@@ -1,5 +1,7 @@
 ﻿using Cmentarz.Data;
+using Cmentarz.Dto.Deceased;
 using Cmentarz.Mappers.Deceased;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +38,36 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
 
         return Ok(deceasedDto);
 
+    }
+
+    [HttpPost]
+    //[Authorize(Roles = "Employee")]
+    public async Task<IActionResult> Create([FromBody] DeceasedCreateDto deceasedDto)
+    {
+        var grave = await context.Graves
+            .Include(g => g.Deceased)
+            .FirstOrDefaultAsync(g => g.Id == deceasedDto.GraveId);
+
+        if (grave == null)
+        {
+            return BadRequest("Grave does not exist");
+        }
+
+        if (grave.Deceased != null)
+        {
+            return BadRequest("Grave already taken");
+        }
+
+        var deceased = deceasedMapper.MapFromCreateDto(deceasedDto);
+
+        grave.Deceased = deceased;
+        
+        context.Deceaseds.Add(deceased);
+        await context.SaveChangesAsync();
+
+        var outputDeceasedDto = deceasedMapper.MapToReadDto(deceased);
+
+        return CreatedAtAction(nameof(Get), new { id = outputDeceasedDto.Id }, outputDeceasedDto);
     }
     
 }

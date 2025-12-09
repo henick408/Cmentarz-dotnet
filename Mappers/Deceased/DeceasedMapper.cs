@@ -30,4 +30,28 @@ public class DeceasedMapper : IDeceasedMapper
             GraveId = deceased.GraveId
         };
     }
+
+    public Deceased MapFromCreateDto(DeceasedCreateDto deceasedDto)
+    {
+        return new Deceased
+        {
+            FirstName = deceasedDto.FirstName,
+            LastName = deceasedDto.LastName,
+            BirthDate = deceasedDto.BirthDate,
+            DeathDate = deceasedDto.DeathDate,
+            GraveId = deceasedDto.GraveId
+        };
+    }
+
+    public DeceasedCreateDto MapToCreateDto(Deceased deceased)
+    {
+        return new DeceasedCreateDto
+        {
+            FirstName = deceased.FirstName,
+            LastName = deceased.LastName,
+            BirthDate = deceased.BirthDate,
+            DeathDate = deceased.DeathDate,
+            GraveId = deceased.GraveId
+        };
+    }
 }

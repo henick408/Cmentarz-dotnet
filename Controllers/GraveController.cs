@@ -63,7 +63,7 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
 
         var outputGraveDto = graveMapper.MapToReadDto(grave);
 
-        return CreatedAtAction(nameof(Get), new { id = grave.Id }, outputGraveDto);
+        return CreatedAtAction(nameof(Get), new { id = outputGraveDto.Id }, outputGraveDto);
     }
 
     [HttpPut("{id:int}")]
