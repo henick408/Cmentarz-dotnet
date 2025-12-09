@@ -61,6 +61,8 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
         var deceased = deceasedMapper.MapFromCreateDto(deceasedDto);
 
         grave.Deceased = deceased;
+        grave.StatusId = 1;
+        grave.Status = await context.GraveStatuses.FindAsync(1);
         
         context.Deceaseds.Add(deceased);
         await context.SaveChangesAsync();
@@ -68,6 +70,22 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
         var outputDeceasedDto = deceasedMapper.MapToReadDto(deceased);
 
         return CreatedAtAction(nameof(Get), new { id = outputDeceasedDto.Id }, outputDeceasedDto);
+    }
+
+    [HttpDelete("{id:int}")]
+    //[Authorize(Roles = "Employee")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deceased = await context.Deceaseds.FindAsync(id);
+        if (deceased == null)
+        {
+            return NotFound();
+        }
+
+        context.Deceaseds.Remove(deceased);
+        await context.SaveChangesAsync();
+
+        return NoContent();
     }
     
 }
