@@ -31,8 +31,8 @@ public static class DbSeeder
             var graveStatuses = new List<GraveStatus>
             {
                 new GraveStatus { Name = "Available" },
-                new GraveStatus { Name = "Occupied" },
-                new GraveStatus { Name = "Reserved" }
+                new GraveStatus {Name = "Reserved"},
+                new GraveStatus { Name = "Occupied" }
             };
             context.GraveStatuses.AddRange(graveStatuses); 
             context.SaveChanges();

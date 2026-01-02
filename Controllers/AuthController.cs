@@ -17,7 +17,7 @@ namespace Cmentarz.Controllers;
 public class AuthController(GraveyardDbContext context, IConfiguration config) : ControllerBase
 {
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public IActionResult Login([FromBody] LoginRequestDto request)
     {
         var user = context.Users.SingleOrDefault(user => user.Email == request.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
