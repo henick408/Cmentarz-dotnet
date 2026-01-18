@@ -5,47 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bd0e2bb-9f25-4d88-932e-f8dc359352bd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cmentarz.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cmentarz.http" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cmentarz.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configuration/ServiceExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/AuthController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/DeceasedController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/GraveController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/GraveStatusController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/DbSeeder.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/GraveyardDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dto/Auth/LoginRequestDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dto/Auth/RegisterRequestDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dto/Deceased/DeceasedCreateDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dto/Deceased/DeceasedReadDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dto/Grave/GraveCreateDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dto/Grave/GraveReadDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mappers/Deceased/DeceasedMapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mappers/Deceased/IDeceasedMapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mappers/Grave/GraveMapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mappers/Grave/IGraveMapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20251204012447_InitialCreate.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20251204012447_InitialCreate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20251209000352_UpdateDeleteBehavior.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20260116201645_AddUniqueGraveLocation.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20260117235452_GraveDeceasedIdFix.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20260117235452_GraveDeceasedIdFix.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20260118000347_GraveDeceasedIdFix2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20260118002439_SomeShit.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20260118002439_SomeShit.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/GraveyardDbContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Deceased.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Grave.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/GraveStatus.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/User.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Properties/launchSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/GraveReservationService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/IGraveReservationService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Cmentarz/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Cmentarz/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/GraveController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/GraveController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/main.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +23,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -90,24 +57,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.Cmentarz: http.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.Cmentarz: http.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Cmentarz: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Cmentarz.csproj" />
@@ -146,6 +114,7 @@
       <workItem from="1768658657729" duration="12728000" />
       <workItem from="1768696468566" duration="134000" />
       <workItem from="1768733677742" duration="146000" />
+      <workItem from="1768734554085" duration="7128000" />
     </task>
     <task id="LOCAL-00001" summary="Endpointy w Grave">
       <option name="closed" value="true" />

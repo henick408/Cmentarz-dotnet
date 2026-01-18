@@ -9,6 +9,7 @@ using Cmentarz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Cmentarz.Controllers;
 
@@ -27,13 +28,13 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         if (userRole == "Employee")
         {
             graves = await context.Graves
+                .Include(grave => grave.Deceased)
                 .ToListAsync();
         }
         else
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             graves = await context.Graves
-                .Where(grave => grave.OwnerId == userId)
+                .Where(grave => grave.OwnerId == null)
                 .Include(grave => grave.Deceased)
                 .ToListAsync();
         }
@@ -48,7 +49,8 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
     public async Task<IActionResult> Get(int id)
     {
         var grave = await context.Graves
-            .FindAsync(id);
+            .Include(grave => grave.Deceased)
+            .FirstOrDefaultAsync(grave => grave.Id == id);
 
         if (grave == null)
         {
@@ -201,5 +203,20 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         await transaction.CommitAsync();
 
         return Ok("Burial completed successfully");
+    }
+
+    [HttpGet("my-graves")]
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> GetMyGraves()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var graves = await context.Graves
+            .Where(grave => grave.OwnerId == userId)
+            .Include(grave => grave.Deceased)
+            .ToListAsync();
+        
+        var graveDtos = graves.Select(graveMapper.MapToReadDto);
+        
+        return Ok(graveDtos);
     }
 }
