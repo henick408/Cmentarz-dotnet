@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllStatuses, GraveStatus } from "./statusApi";
+import { getAllStatuses, type GraveStatus } from "./statusApi";
 
 export const useGraveStatuses = () => {
   const [statuses, setStatuses] = useState<GraveStatus[]>([]);
