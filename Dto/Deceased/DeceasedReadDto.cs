@@ -7,5 +7,4 @@ public class DeceasedReadDto
     public string LastName { get; set; }
     public DateOnly BirthDate { get; set; }
     public DateOnly DeathDate { get; set; }
-    public int GraveId { get; set; }
 }

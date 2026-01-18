@@ -1,4 +1,6 @@
-﻿namespace Cmentarz.Dto.Grave;
+﻿using Cmentarz.Dto.Deceased;
+
+namespace Cmentarz.Dto.Grave;
 
 public class GraveReadDto
 {
@@ -7,4 +9,6 @@ public class GraveReadDto
     public decimal Price { get; set; }
     public int StatusId { get; set; }
     public int? OwnerId { get; set; }
+
+    public DeceasedReadDto? Deceased { get; set; }
 }

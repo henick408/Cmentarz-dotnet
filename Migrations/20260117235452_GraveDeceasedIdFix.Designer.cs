@@ -3,6 +3,7 @@ using System;
 using Cmentarz.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cmentarz.Migrations
 {
     [DbContext(typeof(GraveyardDbContext))]
-    partial class GraveyardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260117235452_GraveDeceasedIdFix")]
+    partial class GraveDeceasedIdFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,11 +43,17 @@ namespace Cmentarz.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("GraveId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GraveId")
+                        .IsUnique();
 
                     b.ToTable("Deceaseds");
                 });
@@ -57,7 +66,7 @@ namespace Cmentarz.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DeceasedId")
+                    b.Property<int>("DeceasedId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Location")
@@ -74,8 +83,6 @@ namespace Cmentarz.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeceasedId");
 
                     b.HasIndex("Location")
                         .IsUnique();
@@ -132,12 +139,19 @@ namespace Cmentarz.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Cmentarz.Models.Deceased", b =>
+                {
+                    b.HasOne("Cmentarz.Models.Grave", "Grave")
+                        .WithOne("Deceased")
+                        .HasForeignKey("Cmentarz.Models.Deceased", "GraveId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Grave");
+                });
+
             modelBuilder.Entity("Cmentarz.Models.Grave", b =>
                 {
-                    b.HasOne("Cmentarz.Models.Deceased", "Deceased")
-                        .WithMany()
-                        .HasForeignKey("DeceasedId");
-
                     b.HasOne("Cmentarz.Models.User", "Owner")
                         .WithMany("Graves")
                         .HasForeignKey("OwnerId")
@@ -149,11 +163,14 @@ namespace Cmentarz.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Deceased");
-
                     b.Navigation("Owner");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Cmentarz.Models.Grave", b =>
+                {
+                    b.Navigation("Deceased");
                 });
 
             modelBuilder.Entity("Cmentarz.Models.GraveStatus", b =>

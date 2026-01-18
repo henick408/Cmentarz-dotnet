@@ -1,5 +1,6 @@
 ﻿using Cmentarz.Mappers.Deceased;
 using Cmentarz.Mappers.Grave;
+using Cmentarz.Services;
 
 namespace Cmentarz.Configuration;
 
@@ -9,5 +10,6 @@ public static class ServiceExtensions
     {
         services.AddScoped<IGraveMapper, GraveMapper>();
         services.AddScoped<IDeceasedMapper, DeceasedMapper>();
+        services.AddScoped<IGraveReservationService, GraveReservationService>();
     }
 }

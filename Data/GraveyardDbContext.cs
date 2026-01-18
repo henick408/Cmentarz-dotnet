@@ -19,6 +19,10 @@ public class GraveyardDbContext(DbContextOptions<GraveyardDbContext> options) : 
             .IsUnique();
 
         modelBuilder.Entity<Grave>()
+            .HasIndex(grave => grave.Location)
+            .IsUnique();
+
+        modelBuilder.Entity<Grave>()
             .HasOne(grave => grave.Owner)
             .WithMany(user => user.Graves)
             .HasForeignKey(grave => grave.OwnerId)
@@ -28,12 +32,6 @@ public class GraveyardDbContext(DbContextOptions<GraveyardDbContext> options) : 
             .HasOne(grave => grave.Status)
             .WithMany(status => status.Graves)
             .HasForeignKey(grave => grave.StatusId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Grave>()
-            .HasOne(grave => grave.Deceased)
-            .WithOne(deceased => deceased.Grave)
-            .HasForeignKey<Deceased>(deceased => deceased.GraveId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

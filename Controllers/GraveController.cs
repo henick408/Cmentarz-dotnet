@@ -1,8 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System.Security.Claims;
 using Cmentarz.Data;
+using Cmentarz.Dto.Deceased;
 using Cmentarz.Dto.Grave;
 using Cmentarz.Mappers.Grave;
 using Cmentarz.Models;
+using Cmentarz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +14,7 @@ namespace Cmentarz.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GraveController(GraveyardDbContext context, IGraveMapper graveMapper) : ControllerBase
+public class GraveController(GraveyardDbContext context, IGraveMapper graveMapper, IGraveReservationService graveReservationService) : ControllerBase
 {
 
     [HttpGet]
@@ -29,7 +32,10 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         else
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            graves = await context.Graves.Where(grave => grave.OwnerId == userId).ToListAsync();
+            graves = await context.Graves
+                .Where(grave => grave.OwnerId == userId)
+                .Include(grave => grave.Deceased)
+                .ToListAsync();
         }
 
         var graveDtos = graves.Select(graveMapper.MapToReadDto);
@@ -38,6 +44,7 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
     }
 
     [HttpGet("{id:int}")]
+    [Authorize(Roles = "User, Employee")]
     public async Task<IActionResult> Get(int id)
     {
         var grave = await context.Graves
@@ -48,9 +55,24 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
             return NotFound();
         }
 
-        var graveDto = graveMapper.MapToReadDto(grave);
+        var role = User.FindFirstValue(ClaimTypes.Role);
 
-        return Ok(graveDto);
+        if (role == "Employee")
+        { 
+            var graveDto = graveMapper.MapToReadDto(grave);
+            return Ok(graveDto);
+        }
+        
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (grave.OwnerId != userId)
+        {
+            return Forbid();
+        }
+
+        var newGraveDto = graveMapper.MapToReadDto(grave);
+        return Ok(newGraveDto);
+
+
     }
 
     [HttpPost]
@@ -58,13 +80,13 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
     public async Task<IActionResult> Create([FromBody] GraveCreateDto graveDto)
     {
         
-        var reservedStatus = context.GraveStatuses.FirstOrDefaultAsync(status => status.Name == "Reserved").Id;
+        var reservedStatus = await context.GraveStatuses.FirstOrDefaultAsync(status => status.Name == "Reserved");
         
         var grave = new Grave
         {
             Location = graveDto.Location,
             Price = graveDto.Price,
-            StatusId = reservedStatus
+            StatusId = reservedStatus.Id
         };
         
         await context.Graves.AddAsync(grave);
@@ -119,28 +141,65 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
     [Authorize(Roles = "User")]
     public async Task<IActionResult> ReserveGrave(int id)
     {
-        var grave = await context.Graves.FirstOrDefaultAsync(grave => grave.Id == id);
-
-        if (grave == null)
-        {
-            return NotFound("Grave not found");
-        }
-
-        if (grave.OwnerId != null)
-        {
-            return BadRequest("Grave already reserved");
-        }
-
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-        var reservedStatus = await context.GraveStatuses.FirstOrDefaultAsync(status => status.Name.ToLower().Equals("awaiting"));
+        try
+        {
+            await graveReservationService.ReserveAsync(id, userId);
+            return Ok("Grave reserved successfully");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [HttpPost("bury")]
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> Bury([FromBody] DeceasedCreateDto dto)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        
+        await using var transaction = await context.Database.BeginTransactionAsync();
+        
+        var grave = await context.Graves
+            .Include(g => g.Deceased)
+            .Include(g => g.Status)
+            .FirstOrDefaultAsync(g => g.Id == dto.GraveId);
 
-        grave.OwnerId = userId;
-        grave.StatusId = reservedStatus.Id;
+        if (grave == null)
+            return NotFound("Grave not found");
 
+        if (grave.OwnerId != userId)
+            return Forbid("This grave does not belong to you");
+
+        if (grave.Deceased != null)
+            return BadRequest("Grave already has a deceased");
+
+        if (grave.Status.Name != "Reserved")
+            return BadRequest("Grave is not reserved");
+        
+        var deceased = new Deceased
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            BirthDate = dto.BirthDate,
+            DeathDate = dto.DeathDate,
+        };
+        
+        context.Deceaseds.Add(deceased);
+        grave.Deceased = deceased;
+        
+        var occupiedStatusId = await context.GraveStatuses
+            .Where(s => s.Name == "Occupied")
+            .Select(s => s.Id)
+            .FirstAsync();
+
+        grave.StatusId = occupiedStatusId;
+        
         await context.SaveChangesAsync();
+        await transaction.CommitAsync();
 
-        return Ok("Grave reserved successfully");
-
+        return Ok("Burial completed successfully");
     }
 }

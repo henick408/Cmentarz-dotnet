@@ -13,8 +13,7 @@ public class DeceasedMapper : IDeceasedMapper
             FirstName = deceasedDto.FirstName,
             LastName = deceasedDto.LastName,
             BirthDate = deceasedDto.BirthDate,
-            DeathDate = deceasedDto.DeathDate,
-            GraveId = deceasedDto.GraveId
+            DeathDate = deceasedDto.DeathDate
         };
     }
 
@@ -26,8 +25,7 @@ public class DeceasedMapper : IDeceasedMapper
             FirstName = deceased.FirstName,
             LastName = deceased.LastName,
             BirthDate = deceased.BirthDate,
-            DeathDate = deceased.DeathDate,
-            GraveId = deceased.GraveId
+            DeathDate = deceased.DeathDate
         };
     }
 
@@ -38,8 +36,7 @@ public class DeceasedMapper : IDeceasedMapper
             FirstName = deceasedDto.FirstName,
             LastName = deceasedDto.LastName,
             BirthDate = deceasedDto.BirthDate,
-            DeathDate = deceasedDto.DeathDate,
-            GraveId = deceasedDto.GraveId
+            DeathDate = deceasedDto.DeathDate
         };
     }
 
@@ -50,8 +47,7 @@ public class DeceasedMapper : IDeceasedMapper
             FirstName = deceased.FirstName,
             LastName = deceased.LastName,
             BirthDate = deceased.BirthDate,
-            DeathDate = deceased.DeathDate,
-            GraveId = deceased.GraveId
+            DeathDate = deceased.DeathDate
         };
     }
 }

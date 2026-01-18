@@ -13,6 +13,7 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
 {
 
     [HttpGet]
+    [Authorize(Roles = "Employee")]
     public async Task<IActionResult> GetAll()
     {
         var deceaseds = await context.Deceaseds

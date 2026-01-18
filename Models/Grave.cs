@@ -14,4 +14,5 @@ public class Grave
     public User? Owner { get; set; }
     
     public Deceased? Deceased { get; set; }
+
 }
