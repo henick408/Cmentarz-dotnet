@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Cmentarz.Data;
 using Cmentarz.Dto.Deceased;
 using Cmentarz.Dto.Grave;
@@ -9,13 +8,16 @@ using Cmentarz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Cmentarz.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GraveController(GraveyardDbContext context, IGraveMapper graveMapper, IGraveReservationService graveReservationService) : ControllerBase
+public class GraveController(
+    GraveyardDbContext context,
+    IGraveMapper graveMapper,
+    IGraveService graveService
+    ) : ControllerBase
 {
 
     [HttpGet]
@@ -82,13 +84,18 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
     public async Task<IActionResult> Create([FromBody] GraveCreateDto graveDto)
     {
         
-        var reservedStatus = await context.GraveStatuses.FirstOrDefaultAsync(status => status.Name == "Reserved");
+        var availableStatus = await context.GraveStatuses.FirstOrDefaultAsync(status => status.Name == "Available");
+
+        if (await context.Graves.FirstOrDefaultAsync(grave => grave.Location == graveDto.Location) != null)
+        {
+            return Conflict();
+        }
         
         var grave = new Grave
         {
             Location = graveDto.Location,
             Price = graveDto.Price,
-            StatusId = reservedStatus.Id
+            StatusId = availableStatus.Id
         };
         
         await context.Graves.AddAsync(grave);
@@ -106,7 +113,7 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         var grave = await context.Graves.FindAsync(id);
         if (grave == null)
         {
-            return NotFound();
+            return NotFound("Grave with given id does not exist");
         }
 
         var statusExists = await context.GraveStatuses.AnyAsync(s => s.Id == updated.StatusId);
@@ -130,7 +137,7 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
         var grave = await context.Graves.FindAsync(id);
         if (grave == null)
         {
-            return NotFound();
+            return NotFound("Grave with given id does not exist");
         }
 
         context.Graves.Remove(grave);
@@ -147,7 +154,7 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
 
         try
         {
-            await graveReservationService.ReserveAsync(id, userId);
+            await graveService.ReserveAsync(id, userId);
             return Ok("Grave reserved successfully");
         }
         catch (InvalidOperationException ex)
@@ -161,46 +168,15 @@ public class GraveController(GraveyardDbContext context, IGraveMapper graveMappe
     public async Task<IActionResult> Bury([FromBody] DeceasedCreateDto dto)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        
-        await using var transaction = await context.Database.BeginTransactionAsync();
-        
-        var grave = await context.Graves
-            .Include(g => g.Deceased)
-            .Include(g => g.Status)
-            .FirstOrDefaultAsync(g => g.Id == dto.GraveId);
 
-        if (grave == null)
-            return NotFound("Grave not found");
-
-        if (grave.OwnerId != userId)
-            return Forbid("This grave does not belong to you");
-
-        if (grave.Deceased != null)
-            return BadRequest("Grave already has a deceased");
-
-        if (grave.Status.Name != "Reserved")
-            return BadRequest("Grave is not reserved");
-        
-        var deceased = new Deceased
+        try
         {
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            BirthDate = dto.BirthDate,
-            DeathDate = dto.DeathDate,
-        };
-        
-        context.Deceaseds.Add(deceased);
-        grave.Deceased = deceased;
-        
-        var occupiedStatusId = await context.GraveStatuses
-            .Where(s => s.Name == "Occupied")
-            .Select(s => s.Id)
-            .FirstAsync();
-
-        grave.StatusId = occupiedStatusId;
-        
-        await context.SaveChangesAsync();
-        await transaction.CommitAsync();
+            await graveService.BuryAsync(dto, userId);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
 
         return Ok("Burial completed successfully");
     }

@@ -10,6 +10,6 @@ public static class ServiceExtensions
     {
         services.AddScoped<IGraveMapper, GraveMapper>();
         services.AddScoped<IDeceasedMapper, DeceasedMapper>();
-        services.AddScoped<IGraveReservationService, GraveReservationService>();
+        services.AddScoped<IGraveService, GraveService>();
     }
 }

@@ -14,12 +14,26 @@ export default function GraveDetailsPage() {
 
   if (!grave) return <div>Loading...</div>;
 
+  const getStatusName = (id: number) => {
+    switch (id) {
+      case 1:
+        return "Free";
+      case 2:
+        return "Reserved";
+      case 3:
+        return "Occupied";
+      default:
+        return "Unknown";
+    }
+  };
+
+
   return (
     <div>
       <h2>Grave Details</h2>
       <p>Location: {grave.location}</p>
       <p>Price: {grave.price}</p>
-      <p>StatusId: {grave.statusId}</p>
+      <p>Status: {getStatusName(grave.statusId)}</p>
       {grave.deceased ? (
         <div>
           <h3>Deceased:</h3>

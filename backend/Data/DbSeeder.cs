@@ -26,17 +26,18 @@ public static class DbSeeder
             context.SaveChanges();
         }
 
-        if (!context.GraveStatuses.Any())
+        if (context.GraveStatuses.Any())
         {
-            var graveStatuses = new List<GraveStatus>
-            {
-                new GraveStatus { Name = "Available" },
-                new GraveStatus {Name = "Reserved"},
-                new GraveStatus { Name = "Occupied" }
-            };
-            context.GraveStatuses.AddRange(graveStatuses); 
-            context.SaveChanges();
+            return;
         }
-        
+        var graveStatuses = new List<GraveStatus>
+        {
+            new() { Name = "Available" },
+            new() {Name = "Reserved"},
+            new() { Name = "Occupied" }
+        };
+        context.GraveStatuses.AddRange(graveStatuses); 
+        context.SaveChanges();
+
     }
 }

@@ -32,7 +32,7 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
 
         if (deceased == null)
         {
-            return NotFound();
+            return NotFound("Grave with given id does not exist");
         }
 
         var deceasedDto = deceasedMapper.MapToReadDto(deceased);
@@ -42,7 +42,7 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
     }
 
     [HttpPost]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Employee")]
     public async Task<IActionResult> Create([FromBody] DeceasedCreateDto deceasedDto)
     {
         var grave = await context.Graves
@@ -61,8 +61,10 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
 
         var deceased = deceasedMapper.MapFromCreateDto(deceasedDto);
 
+        var availableStatus = await context.GraveStatuses.FirstAsync(status => status.Name == "Available");
+        
         grave.Deceased = deceased;
-        grave.StatusId = 1;
+        grave.StatusId = availableStatus.Id;
         grave.Status = await context.GraveStatuses.FindAsync(1);
         
         context.Deceaseds.Add(deceased);
@@ -74,13 +76,13 @@ public class DeceasedController(GraveyardDbContext context, IDeceasedMapper dece
     }
 
     [HttpDelete("{id:int}")]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Employee")]
     public async Task<IActionResult> Delete(int id)
     {
         var deceased = await context.Deceaseds.FindAsync(id);
         if (deceased == null)
         {
-            return NotFound();
+            return NotFound("Deceased with given id does not exist");
         }
 
         context.Deceaseds.Remove(deceased);
