@@ -1,7 +1,10 @@
-﻿namespace Cmentarz.Dto.Auth;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cmentarz.Dto.Auth;
 
 public class RegisterRequestDto
 {
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 }
