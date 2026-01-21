@@ -1,4 +1,4 @@
-Backend .NET frontend React
-Jest docker
+Aplikacja webowa symulująca system zarządzania cmentarzem
 
-docker compose up --build
+W celu uruchomienia aplikacji należy skorzystać z Dockera
+docker compose up
